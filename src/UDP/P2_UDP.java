@@ -23,7 +23,7 @@ public class P2_UDP {
 		
 		//Processo de SEND do processo 2 
 		Scanner read = new Scanner(System.in);
-		System.out.print("Digite sua mensagem P2:");
+		System.out.print("P2:");
 		String msg2 = read.next();
 		//String msg2 = "Ola tudo bem?";
 		byte [] buf2 = msg2.getBytes();
