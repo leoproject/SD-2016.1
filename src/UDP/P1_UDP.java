@@ -12,11 +12,12 @@ public class P1_UDP {
 	public static void main(String[] args) throws Exception {
 		//Socket + Bind
 		//Processo de SEND do processo 1
+		System.out.println("Terminal do P1!!!!! \n");
 		DatagramSocket socket = new DatagramSocket(3030);
 		
-		System.out.print("Digite sua mensagem P1:");
+		System.out.print("P1:");
 		Scanner read = new Scanner(System.in);
-		String msg = read.next();
+		String msg = read.nextLine();// nextline() pega toda linha inserida pelo teclado
 		
 		byte [] buf = msg.getBytes();
 		int portDest = 4040;
@@ -32,7 +33,7 @@ public class P1_UDP {
 		String msg2 = new String(pack2.getData());
 		int portOr = pack2.getPort();
 		InetAddress addrOr = pack2.getAddress();
-		System.out.println(msg2);
+		System.out.println("P2:"+msg2.trim());// trim() é uma função de tirar o restante que não é da mensagem. 
 		socket.close();
 
 	}
