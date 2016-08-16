@@ -42,6 +42,7 @@ public class P2_TCP {
 			out.write(buf2);
 		}
 		socket.close();
+		System.out.print("Chat Rádio finalizado com sucesso!!!!! ");
 
 	}
 

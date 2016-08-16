@@ -41,6 +41,7 @@ public class P1_TCP {
 			System.out.println("P2:" + msg2);
 		}
 		socket.close();
+		System.out.print("Chat Rádio finalizado com sucesso!!!!! ");
 
 	}
 
