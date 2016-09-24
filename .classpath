@@ -8,5 +8,10 @@
 	<classpathentry kind="lib" path="C:/Users/Leonardo De Jesus/Desktop/rabbitmq-java-client-bin-3.6.5/junit.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Leonardo De Jesus/Desktop/rabbitmq-java-client-bin-3.6.5/rabbitmq-client.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Leonardo De Jesus/Desktop/rabbitmq-java-client-bin-3.6.5/rabbitmq-client-tests.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Leonardo De Jesus/Desktop/jdom/jdom-2.0.6.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Leonardo De Jesus/Desktop/jdom/jdom-2.0.6-contrib.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Leonardo De Jesus/Desktop/jdom/jdom-2.0.6-javadoc.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Leonardo De Jesus/Desktop/jdom/jdom-2.0.6-junit.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Leonardo De Jesus/Desktop/jdom/jdom-2.0.6-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
