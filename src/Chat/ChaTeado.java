@@ -52,9 +52,10 @@ public class ChaTeado {
 		int liberar = 0;
 		int liberar2 = 0;
 		int test=0;
+		int test2=0;
 		
 		int verificar,verificar2,verificar3;
-		int um=0,dois=0;
+		int um=0,dois=0,tres=0;
 		String cmd = "";
 		
 		
@@ -69,32 +70,23 @@ public class ChaTeado {
 		System.out.println("");
 		
 		//metodo receive para receber as mensagens no formato XML
+         
+		channel.queueDeclare(nickname, false, false, false, null);
+       
 		Consumer consumer = new DefaultConsumer(channel) {
-		      @Override
-		      public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException
-		        {
-		    	  try {
-		    		  
-		    		    String message = new String(body, "UTF-8");	
-		    		    SAXBuilder builder = new SAXBuilder();
-		    		    Document doc = builder.build(new StringReader(message));
-		    	        ByteArrayInputStream stream = new ByteArrayInputStream (message.getBytes("UTF-8"));
-			            System.out.println(message);
-				  //Document doc = builder.build(stream);
-				  
-				  //Element classElement = doc.getRootElement();
-				  } catch (JDOMException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-				  };
-		      }
-		    };
-		    channel.basicConsume(nickname, true, consumer);
+			@Override
+			public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties,
+					byte[] body) throws IOException {
+				String message = new String(body, "UTF-8");
+				System.out.println(message);
+				
+				
+				
+			}
+		};
+		channel.basicConsume(nickname, true, consumer);
 		
 		
-		
-	    
-	    
 		
 		// loop até colocar a palavra off
 		while (!((msg.equals(off)) || (msg.equals(off)))) {
@@ -104,7 +96,11 @@ public class ChaTeado {
 				msg = s.nextLine();
 			}
 			else {
-				System.out.print(contato+">");
+				if (test2==0){
+				System.out.print(contato+">");}
+				else {
+					System.out.print(contato+"(grupo)>");
+				}
 				msg = s.nextLine();
 			}
 			
@@ -116,26 +112,45 @@ public class ChaTeado {
 					cmd += msg.charAt(i);
 					i++;
 				}
-
+				
+                 //criar grupo no canal do grupo
 				if (cmd.equals("creategroup")) {
 					um = msg.indexOf(" ");
 				    dois = msg.lastIndexOf("");
 					channel.exchangeDeclare(msg.substring(um + 1, dois), "fanout", true);
 					cmd = "";
-				} else if (cmd.equals("add")) {
+				} 
+				//comando para remover o grupo
+				else if(cmd.equals("removegroup")){
+					um = msg.indexOf(" ");
+				    dois = msg.lastIndexOf("");
+					channel.exchangeDeleteNoWait(msg.substring(um + 1, dois), true);
+					cmd = "";
+					contato=nickname;
+				}
+				//adicionar um membro no grupo
+				else if (cmd.equals("group+")) {
 					//aqui coloco se foi ele quem criou o grupo ele deve está no grupo
 					if (test == 0){
 						um = msg.indexOf(" ");
 						dois = msg.lastIndexOf(" ");
-						int tres = msg.lastIndexOf("");
+						tres = msg.lastIndexOf("");
 						channel.queueBind(nickname, msg.substring(dois + 1, tres),"");
 						test+=1;
 					}
 					um = msg.indexOf(" ");
 					dois = msg.lastIndexOf(" ");
-					int tres = msg.lastIndexOf("");
+					tres = msg.lastIndexOf("");
 					channel.queueBind(msg.substring(um + 1, dois), msg.substring(dois + 1, tres), "");
 					cmd = "";
+				}
+				//remover um membro do grupo
+				else if(cmd.equals("group-")){
+					um = msg.indexOf(" ");
+					dois = msg.lastIndexOf(" ");
+					tres = msg.lastIndexOf("");
+					channel.queueUnbind(msg.substring(um + 1, dois),msg.substring(dois + 1, tres), "");
+				    cmd="";
 				} else {
 					System.out.println("Comando inválido");
 				}
@@ -147,50 +162,28 @@ public class ChaTeado {
 			if ((verificar == 0 && verificar2 == 1)) {
 				um = msg.lastIndexOf("@");
 				dois = msg.lastIndexOf("");
+				test2=2;
 				contato = msg.substring(um + 1, dois);
 				liberar2 = 1;
 				liberar = 0;
 				System.out.println("=======================================================================");
-				System.out.println("         "+nickname+" conversando com " + contato + "                  ");
+				System.out.println("                   Conversando com " + contato + "(Grupo)              ");
 				System.out.println("=======================================================================");
 			} else if ((liberar2 == 0) && (liberar == 0) && (verificar != 0) && (verificar3 != 0)) {
 				System.out.println("Não pode na primeira vez enviar mensagem antes de estabelecer o contato");
 			} else if ((verificar3 != 0) && (liberar == 0) && (liberar2 != 0)) {
-				
-					Document doc = new Document();
-
-					Element root = new Element("message");
-
-					Element sender = new Element("sender");
-					sender.setText(nickname);
-					root.addContent(sender);
-
-					Element date = new Element("date");
-					date.setText(data1);
-					root.addContent(date);
-
-					Element time = new Element("time");
-					time.setText(hora1);
-					root.addContent(time);
-
-					Element content = new Element("content");
-					content.setText(msg);
-					root.addContent(content);
-
-					doc.setRootElement(root);
-
-					XMLOutputter xout = new XMLOutputter(Format.getPrettyFormat());
-					xout.output(doc, baos);
-					channel.basicPublish(contato, "", null,baos.toByteArray());
-				
+				msg = contato+"(grupo)"+nickname+">"+msg;
+				channel.basicPublish(contato, "", null, msg.getBytes("UTF-8"));
+				test2=0;
 			}
-			// verifica que está falando com um contato
+			//Verificar se esta entrando na conversa com um contato
 			if ((verificar == 0 && verificar2 != 1)) {
 				um = msg.lastIndexOf("@");
 				dois = msg.lastIndexOf("");
 				contato = msg.substring(um + 1, dois);
 				liberar = 1;
 				liberar2 = 0;
+				test2=3;
 				channel.queueDeclare(contato, false, false, false, null);
 				System.out.println("=======================================================================");
 				System.out.println("                   Conversando com " + contato + "                     ");
@@ -198,36 +191,14 @@ public class ChaTeado {
 			} else if ((liberar2 == 0) && (liberar == 0) && (verificar != 0) && (verificar3 != 0)) {
 				System.out.println("Não pode na primeira vez enviar mensagem antes de estabelecer o contato");
 			} else if ((verificar3 != 0) && (liberar != 0) && (liberar2 == 0)) {
-				Document doc = new Document();
-
-				Element root = new Element("message");
-
-				Element sender = new Element("sender");
-				sender.setText(nickname);
-				root.addContent(sender);
-
-				Element date = new Element("date");
-				date.setText(data1);
-				root.addContent(date);
-
-				Element time = new Element("time");
-				time.setText(hora1);
-				root.addContent(time);
-
-				Element content = new Element("content");
-				content.setText(msg);
-				root.addContent(content);
-
-				doc.setRootElement(root);
-
-				XMLOutputter xout = new XMLOutputter(
-						Format.getPrettyFormat());
-				xout.output(doc, baos);
-				channel.basicPublish("", contato, null,baos.toByteArray());
+				msg = "("+data1+ " as " + hora1 +" )"+ nickname+" diz: " + msg;
+				channel.basicPublish("", contato, null, msg.getBytes("UTF-8"));
+				
 
 			}
 
 		}
+
 		 channel.close();
 		    connection.close();
 		
