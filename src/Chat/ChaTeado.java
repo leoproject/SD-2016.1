@@ -100,11 +100,11 @@ public class ChaTeado {
 		while (!((msg.equals(off)) || (msg.equals(off)))) {
 			//verificar se foi criado seu nickname e mensagem
 			if (contato.equals("")) {
-				System.out.print("#--#");
+				System.out.print(">");
 				msg = s.nextLine();
 			}
 			else {
-				System.out.print("#--#");
+				System.out.print(contato+">");
 				msg = s.nextLine();
 			}
 			
@@ -156,8 +156,7 @@ public class ChaTeado {
 			} else if ((liberar2 == 0) && (liberar == 0) && (verificar != 0) && (verificar3 != 0)) {
 				System.out.println("Não pode na primeira vez enviar mensagem antes de estabelecer o contato");
 			} else if ((verificar3 != 0) && (liberar == 0) && (liberar2 != 0)) {
-				test=msg.indexOf("@");
-				if (test != 1) {
+				
 					Document doc = new Document();
 
 					Element root = new Element("message");
@@ -167,7 +166,7 @@ public class ChaTeado {
 					root.addContent(sender);
 
 					Element date = new Element("date");
-					date.setText(data);
+					date.setText(data1);
 					root.addContent(date);
 
 					Element time = new Element("time");
@@ -180,15 +179,12 @@ public class ChaTeado {
 
 					doc.setRootElement(root);
 
-					XMLOutputter xout = new XMLOutputter(
-							Format.getPrettyFormat());
+					XMLOutputter xout = new XMLOutputter(Format.getPrettyFormat());
 					xout.output(doc, baos);
-
-					channel.queueDeclare(contato, false, false, false, null);
-					channel.basicPublish("", contato, null,baos.toByteArray());
-				}
+					channel.basicPublish(contato, "", null,baos.toByteArray());
+				
 			}
-			// verifica que estaá falando com um contato
+			// verifica que está falando com um contato
 			if ((verificar == 0 && verificar2 != 1)) {
 				um = msg.lastIndexOf("@");
 				dois = msg.lastIndexOf("");
@@ -211,7 +207,7 @@ public class ChaTeado {
 				root.addContent(sender);
 
 				Element date = new Element("date");
-				date.setText(data);
+				date.setText(data1);
 				root.addContent(date);
 
 				Element time = new Element("time");
@@ -227,8 +223,6 @@ public class ChaTeado {
 				XMLOutputter xout = new XMLOutputter(
 						Format.getPrettyFormat());
 				xout.output(doc, baos);
-
-				channel.queueDeclare(contato, false, false, false, null);
 				channel.basicPublish("", contato, null,baos.toByteArray());
 
 			}
