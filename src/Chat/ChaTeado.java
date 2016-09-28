@@ -81,28 +81,28 @@ public class ChaTeado {
 		    		  SAXBuilder builder = new SAXBuilder();
 		    		  
 		    		  Document doc = builder.build(new StringReader(message));
+		    		  Element classElement = doc.getRootElement();
+		    		  //monatando a mensagem apartir do XML
+		    		  message="("+classElement.getChild("date").getText()+ " "+
+		    		          classElement.getChild("time").getText()+") "+
+		    				  classElement.getChild("sender").getText()+
+		    		          " diz:"+classElement.getChild("content").getText();
 		    		  
 		            
 		    	  ByteArrayInputStream stream = new ByteArrayInputStream (message.getBytes("UTF-8"));
 			        
-			      
+		    	  System.out.println("");
 			      System.out.println(message);
+			      System.out.print(classElement.getChild("sender").getText()+">");
 			      
-			      
-				  //Document doc = builder.build(stream);
-				  
-				  //Element classElement = doc.getRootElement();
-				  
-				  
-				  
 				  } catch (JDOMException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 				  };
 		      }
 		    };
-		    
 		    channel.basicConsume(nickname, true, consumer);
+		
 		    /*
 		
 		channel.queueDeclare(nickname, false, false, false, null);
@@ -215,7 +215,7 @@ public class ChaTeado {
 			    
 				
 				Element sender = new Element("sender");      
-				sender.setText(nickname);
+				sender.setText(contato+"/"+nickname);
 				root.addContent(sender);
 				
 				Element date = new Element("date");      
@@ -237,7 +237,7 @@ public class ChaTeado {
 				xout.output(doc, baos);		
 				
 				channel.queueDeclare(contato, false, false, false, null);
-				channel.basicPublish("", contato, null, baos.toByteArray());
+				channel.basicPublish( contato,"", null, baos.toByteArray());
 			    test2=0;
 			}
 			//Verificar se esta entrando na conversa com um contato
