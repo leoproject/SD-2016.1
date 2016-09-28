@@ -103,24 +103,7 @@ public class ChaTeado {
 		    };
 		    channel.basicConsume(nickname, true, consumer);
 		
-		    /*
-		
-		channel.queueDeclare(nickname, false, false, false, null);
-       
-		Consumer consumer = new DefaultConsumer(channel) {
-			@Override
-			public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties,
-					byte[] body) throws IOException {
-				String message = new String(body, "UTF-8");
-				System.out.println(message);
-				
-				
-				
-			}
-		};
-		channel.basicConsume(nickname, true, consumer);
-		*/
-		
+		    
 		
 		// loop até colocar a palavra off
 		while (!((msg.equals(off)) || (msg.equals(off)))) {
@@ -255,9 +238,7 @@ public class ChaTeado {
 			} else if ((liberar2 == 0) && (liberar == 0) && (verificar != 0) && (verificar3 != 0)) {
 				System.out.println("Não pode na primeira vez enviar mensagem antes de estabelecer o contato");
 			} else if ((verificar3 != 0) && (liberar != 0) && (liberar2 == 0)) {
-				//msg = nick+" diz ("+data1+" "+hora1+"): \n  "+msg;
-				
-				
+								
 				Document doc = new Document();  
 				
 				Element root = new Element("message");

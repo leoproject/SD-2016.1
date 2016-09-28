@@ -13,5 +13,11 @@
 	<classpathentry kind="lib" path="C:/Users/Leonardo De Jesus/Desktop/jdom/jdom-2.0.6-javadoc.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Leonardo De Jesus/Desktop/jdom/jdom-2.0.6-junit.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Leonardo De Jesus/Desktop/jdom/jdom-2.0.6-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Leonardo De Jesus/workspace/SD-2016.1/src/Chat/rabbitmq-java-client-bin-3.6.5/commons-cli-1.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Leonardo De Jesus/workspace/SD-2016.1/src/Chat/rabbitmq-java-client-bin-3.6.5/commons-io-1.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Leonardo De Jesus/workspace/SD-2016.1/src/Chat/rabbitmq-java-client-bin-3.6.5/hamcrest-core.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Leonardo De Jesus/workspace/SD-2016.1/src/Chat/rabbitmq-java-client-bin-3.6.5/junit.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Leonardo De Jesus/workspace/SD-2016.1/src/Chat/rabbitmq-java-client-bin-3.6.5/rabbitmq-client.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Leonardo De Jesus/workspace/SD-2016.1/src/Chat/rabbitmq-java-client-bin-3.6.5/rabbitmq-client-tests.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
