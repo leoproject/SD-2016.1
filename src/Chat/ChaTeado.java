@@ -46,7 +46,6 @@ public class ChaTeado {
 		String nickname;
 		String msg = " ";
 		String off = "desligar";
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		
 		
 		int liberar = 0;
@@ -70,7 +69,42 @@ public class ChaTeado {
 		System.out.println("");
 		
 		//metodo receive para receber as mensagens no formato XML
-         
+		channel.queueDeclare(nickname, false, false, false, null);
+		Consumer consumer = new DefaultConsumer(channel) {
+		      @Override
+		      public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException
+		        {
+		    	  try {
+		    		  
+		    		  String message = new String(body, "UTF-8");	
+		    		  
+		    		  SAXBuilder builder = new SAXBuilder();
+		    		  
+		    		  Document doc = builder.build(new StringReader(message));
+		    		  
+		            
+		    	  ByteArrayInputStream stream = new ByteArrayInputStream (message.getBytes("UTF-8"));
+			        
+			      
+			      System.out.println(message);
+			      
+			      
+				  //Document doc = builder.build(stream);
+				  
+				  //Element classElement = doc.getRootElement();
+				  
+				  
+				  
+				  } catch (JDOMException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+				  };
+		      }
+		    };
+		    
+		    channel.basicConsume(nickname, true, consumer);
+		    /*
+		
 		channel.queueDeclare(nickname, false, false, false, null);
        
 		Consumer consumer = new DefaultConsumer(channel) {
@@ -85,7 +119,7 @@ public class ChaTeado {
 			}
 		};
 		channel.basicConsume(nickname, true, consumer);
-		
+		*/
 		
 		
 		// loop até colocar a palavra off
@@ -96,7 +130,7 @@ public class ChaTeado {
 				msg = s.nextLine();
 			}
 			else {
-				if (test2==0){
+				if (test2==3){
 				System.out.print(contato+">");}
 				else {
 					System.out.print(contato+"(grupo)>");
@@ -172,9 +206,39 @@ public class ChaTeado {
 			} else if ((liberar2 == 0) && (liberar == 0) && (verificar != 0) && (verificar3 != 0)) {
 				System.out.println("Não pode na primeira vez enviar mensagem antes de estabelecer o contato");
 			} else if ((verificar3 != 0) && (liberar == 0) && (liberar2 != 0)) {
-				msg = contato+"(grupo)"+nickname+">"+msg;
-				channel.basicPublish(contato, "", null, msg.getBytes("UTF-8"));
-				test2=0;
+	//msg = nick+" diz ("+data1+" "+hora1+"): \n  "+msg;
+				
+				
+				Document doc = new Document();  
+				
+				Element root = new Element("message");
+			    
+				
+				Element sender = new Element("sender");      
+				sender.setText(nickname);
+				root.addContent(sender);
+				
+				Element date = new Element("date");      
+				date.setText(data1);
+				root.addContent(date);
+				
+				Element time = new Element("time");      
+				time.setText(hora1);
+				root.addContent(time);
+				
+				Element content = new Element("content");      
+				content.setText(msg);	
+				root.addContent(content);
+				
+				doc.setRootElement(root);
+				         
+				XMLOutputter xout = new XMLOutputter(Format.getPrettyFormat());					
+				ByteArrayOutputStream baos = new ByteArrayOutputStream();
+				xout.output(doc, baos);		
+				
+				channel.queueDeclare(contato, false, false, false, null);
+				channel.basicPublish("", contato, null, baos.toByteArray());
+			    test2=0;
 			}
 			//Verificar se esta entrando na conversa com um contato
 			if ((verificar == 0 && verificar2 != 1)) {
@@ -191,9 +255,39 @@ public class ChaTeado {
 			} else if ((liberar2 == 0) && (liberar == 0) && (verificar != 0) && (verificar3 != 0)) {
 				System.out.println("Não pode na primeira vez enviar mensagem antes de estabelecer o contato");
 			} else if ((verificar3 != 0) && (liberar != 0) && (liberar2 == 0)) {
-				msg = "("+data1+ " as " + hora1 +" )"+ nickname+" diz: " + msg;
-				channel.basicPublish("", contato, null, msg.getBytes("UTF-8"));
+				//msg = nick+" diz ("+data1+" "+hora1+"): \n  "+msg;
 				
+				
+				Document doc = new Document();  
+				
+				Element root = new Element("message");
+			    
+				
+				Element sender = new Element("sender");      
+				sender.setText(nickname);
+				root.addContent(sender);
+				
+				Element date = new Element("date");      
+				date.setText(data1);
+				root.addContent(date);
+				
+				Element time = new Element("time");      
+				time.setText(hora1);
+				root.addContent(time);
+				
+				Element content = new Element("content");      
+				content.setText(msg);	
+				root.addContent(content);
+				
+				doc.setRootElement(root);
+				         
+				XMLOutputter xout = new XMLOutputter(Format.getPrettyFormat());					
+				ByteArrayOutputStream baos = new ByteArrayOutputStream();
+				xout.output(doc, baos);		
+				
+				channel.queueDeclare(contato, false, false, false, null);
+				channel.basicPublish("", contato, null, baos.toByteArray());
+			
 
 			}
 
